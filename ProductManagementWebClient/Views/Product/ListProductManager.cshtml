@@ -1,0 +1,464 @@
+﻿@model ProjectManagementAPl.ViewModels.ProductViewModel
+@{
+    ViewData["Title"] = "ListProductManager";
+}
+@section styles{
+    <style>
+        .pagination {
+/*            display: inline-block;*/
+        }
+
+            .pagination a {
+                color: black;
+                font-size: 22px;
+                float: left;
+                padding: 8px 16px;
+                text-decoration: none;
+            }
+
+                .pagination a.active {
+                    background-color: #ee3e0f;
+                    color: black;
+                }
+
+                .pagination a:hover:not(.active) {
+                    background-color: #ee3e0f;
+                }
+
+        table {
+            text-align: center;
+            margin: 0 auto;
+        }
+
+        tbody, td, tfoot, th, thead, tr {
+            border-width: 1px;
+        }
+
+        button a {
+            text-decoration: none;
+        }
+
+
+
+        /*        for form image*/
+        .infor {
+            text-align: center;
+        }
+
+        .image-upload > input {
+            display: none;
+        }
+
+        .upload-icon {
+            width: 221px;
+            height: 150px;
+            border: 2px solid #5642BE;
+            border-style: dotted;
+            border-radius: 18px;
+            float: left;
+        }
+
+
+            .upload-icon .icon {
+                width: 170px;
+                height: 110px;
+                margin: 19px;
+                cursor: pointer;
+            }
+
+        .prev {
+            display: none;
+            width: 95px;
+            height: 92px;
+            margin: 2px;
+            border-radius: 15px;
+        }
+        /*--------------------------------*/
+
+    </style>
+}
+
+<h1 style="text-align: center">Manager Products</h1>
+
+<!-- toasts -->
+<div class="toast-container">
+</div>
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary ml-5 mb-4" data-toggle="modal" data-target="#exampleModal">
+    ADD NEW
+</button>
+<!-- Modal Create -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Create New Product</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="contactForm" name="contact" role="form">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label asp-for="productName" class="control-label"></label>
+                            <input asp-for="productName" class="form-control" />
+                            <span asp-validation-for="productName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="categoryName">Category Name</label>
+                            <select id="datalistOptions" name="categoryId" class="selectpicker" data-show-subtext="false" data-live-search="true"></select>
+
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="unitPrice" class="control-label"></label>
+                            <input asp-for="unitPrice" class="form-control" />
+                            <span asp-validation-for="unitPrice" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="unitsInStock" class="control-label"></label>
+                            <input asp-for="unitsInStock" class="form-control" />
+                            <span asp-validation-for="unitsInStock" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="unitsOnOrder" class="control-label"></label>
+                            <input asp-for="unitsOnOrder" class="form-control" />
+                            <span asp-validation-for="unitsOnOrder" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="image">image</label>
+                            <div class="image-upload">
+                                <label for="file-input" id="thumbnail-image-label">
+                                    <div class="upload-icon">
+                                        <img class="icon" src="~/images/insert-image.png">                                        
+                                    </div>
+                                </label>
+                                <input class="form-control" id="file-input" type="file" name="myfile" onchange="loadFile(event)" />
+                                <div id="cont">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="description" class="control-label"></label>
+                            <input asp-for="description" class="form-control" />
+                            <span asp-validation-for="description" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="submitBtn">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Delete -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Are you sure you want to DETELE this product?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="contactForm" name="contact" role="form">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label asp-for="productId" class="control-label"></label>
+                            <input id="productId-de" class="form-control" readonly />
+                            <span asp-validation-for="productId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="productName" class="control-label"></label>
+                            <input id="productName-de" class="form-control" readonly />
+                            <span asp-validation-for="productName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="categoryName">Category Name</label>
+                            <input id="categoryName-de" name="categoryName" class="form-control" readonly />
+
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="unitPrice" class="control-label"></label>
+                            <input id="unitPrice-de" class="form-control" readonly />
+                            <span asp-validation-for="unitPrice" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="unitsInStock" class="control-label"></label>
+                            <input id="unitsInStock-de" class="form-control" readonly />
+                            <span asp-validation-for="unitsInStock" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="unitsOnOrder" class="control-label"></label>
+                            <input id="unitsOnOrder-de" class="form-control" readonly />
+                            <span asp-validation-for="unitsOnOrder" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <img id="imagede" src="">
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="description" class="control-label"></label>
+                            <input id="description-de" class="form-control" readonly />
+                            <span asp-validation-for="description" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="submitBtn-de">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal Update -->
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Are you sure you want to UPDATE this product?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="contactForm-up" name="contact" role="form">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label asp-for="productId" class="control-label"></label>
+                            <input id="productId-up" name="productId" class="form-control" readonly />
+                            <span asp-validation-for="productId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="productName" class="control-label"></label>
+                            <input id="productName-up" name="productName" class="form-control"  />
+                            <span asp-validation-for="productName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="categoryName">Category Name</label>
+                            <select id="datalistOptions-up" name="categoryId" class="selectpicker" data-show-subtext="false" data-live-search="true"></select>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="unitPrice" class="control-label"></label>
+                            <input id="unitPrice-up" name="unitPrice" class="form-control"  />
+                            <span asp-validation-for="unitPrice" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="unitsInStock" class="control-label"></label>
+                            <input id="unitsInStock-up" name="unitsInStock" class="form-control"  />
+                            <span asp-validation-for="unitsInStock" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="unitsOnOrder" class="control-label"></label>
+                            <input id="unitsOnOrder-up" name="unitsOnOrder" class="form-control"  />
+                            <span asp-validation-for="unitsOnOrder" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="image">image</label>
+                            <div class="image-upload">
+                                <label for="file-input-up" id="thumbnail-image-label-up">
+                                    <div class="upload-icon">
+                                        <img class="icon" src="~/images/insert-image.png">
+                                    </div>
+                                </label>
+                                <input class="form-control" id="file-input-up" type="file" name="myfile" onchange="loadFileUp(event)" />
+                                <div id="cont-up">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="description" class="control-label"></label>
+                            <input id="description-up" name="description" class="form-control"  />
+                            <span asp-validation-for="description" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="submitBtn-up">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*<table border="1px">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.productId)
+            </th>
+            <th>
+                CategoryName
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.productName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.unitPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.unitsInStock)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.unitsOnOrder)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.image)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.status)
+            </th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>*@
+
+<table id="productTable" class="display table table-sm table-bordered table-striped" style="width:100%">
+    <thead>
+        <tr>
+            <th width="1%">
+                @Html.DisplayNameFor(model => model.productId)
+            </th>
+            <th>
+                CategoryName
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.productName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.unitPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.unitsInStock)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.unitsOnOrder)
+            </th>
+            <th width="10%">
+                @Html.DisplayNameFor(model => model.image)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.status)
+            </th>
+            <th width="13%">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Data rows will be populated dynamically -->
+    </tbody>
+</table>
+
+    @*<ul class="pagination">
+        <li class="page-item active" id="prevPage"><a class="page-link" href="#">Previous</a></li>
+        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item"><a class="page-link" href="#">4</a></li>
+        <li class="page-item" id="nextPage"><a class="page-link" href="#">Next</a></li>
+    </ul>*@
+
+
+
+@section Scripts {
+    @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }*@
+    <script id="token" type="application/json">@Html.Raw(Json.Serialize(Context.Items["token"]))</script>
+    <script src="~/js/productManager.js"></script>
+    <script>
+        $(document).ready(function () {
+        });
+
+        //dưới là dấu x
+        var loadFile = function (event) {
+            console.log('Add');
+            var imgCont = document.getElementById("cont");
+            imgCont.innerHTML = "";
+            var label = document.getElementById('thumbnail-image-label')
+            label.style = "display: none;"
+
+            for (let i = 0; i < event.target.files.length; i++) {
+                var divElm = document.createElement('div');
+                divElm.id = "rowdiv" + i;
+
+
+
+                var spanElm = document.createElement('span');
+                var image = document.createElement('img');
+                image.src = URL.createObjectURL(event.target.files[i]);
+                image.id = "output" + i;
+                image.width = "200";
+
+                spanElm.appendChild(image);
+                var deleteImg = document.createElement('button');
+                deleteImg.innerHTML = "x";
+                deleteImg.style = "cursor: pointer";
+
+                deleteImg.onclick = function () {
+                    this.parentNode.remove();
+                    label.style = "";
+                    document.getElementById('file-input').value = null;
+                };
+
+                divElm.appendChild(spanElm);
+                divElm.appendChild(deleteImg);
+                imgCont.appendChild(divElm);
+            }
+        };
+
+        var loadFileUp = function (event) {
+            console.log('Update');
+            var imgCont = document.getElementById("cont-up");
+            imgCont.innerHTML = "";
+            var label = document.getElementById('thumbnail-image-label-up')
+            label.style = "display: none;"
+
+            for (let i = 0; i < event.target.files.length; i++) {
+                var divElm = document.createElement('div');
+                divElm.id = "rowdiv-up" + i;
+
+                var spanElm = document.createElement('span');
+                var image = document.createElement('img');
+                image.src = URL.createObjectURL(event.target.files[i]);
+                image.id = "output-up" + i;
+                image.width = "200";
+
+                spanElm.appendChild(image);
+                var deleteImgUp = document.createElement('button');
+                deleteImgUp.innerHTML = "x";
+                deleteImgUp.style = "cursor: pointer";
+
+                deleteImgUp.onclick = function () {
+                    this.parentNode.remove();
+                    label.style = "";
+                    document.getElementById('file-input-up').value = null;
+                };
+
+                divElm.appendChild(spanElm);
+                divElm.appendChild(deleteImgUp);
+                imgCont.appendChild(divElm);
+            }
+        };
+    </script>
+}
+

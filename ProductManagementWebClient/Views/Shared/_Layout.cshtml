@@ -1,0 +1,277 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ProductManagementWebClient</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <link href="~/css/layout/responsive.css" rel="stylesheet" />
+    <link href="~/css/layout/jquery.mCustomScrollbar.min.css" rel="stylesheet" />
+    <link href="~/css/layout/styleHome.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+    <!-- Bootstrap Select CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
+
+    @RenderSection("styles", false)
+</head>
+<body>
+    <div class="sidebar">
+        @*<!-- Sidebar  -->*@
+        <nav id="sidebar">
+
+            <div id="dismiss">
+                <i class="fa fa-arrow-left"></i>
+            </div>
+
+            <ul class="list-unstyled components">
+                <li class="">
+                    <a href="#">Manager Category</a>
+                </li>
+                <li class="">
+                    <a href="/Product/ListProductManager">Manager Product</a>
+                </li>
+                <li class="">
+                    <a href="/Account/listAccountManager">Manager Customer</a>
+                </li>
+
+
+                <li class="">
+                    <a href="/Account/listOrderByAccountByCid/">History Order</a>
+                </li>
+
+            </ul>
+
+        </nav>
+    </div>
+    @*narbar*@
+    <div id="content">
+        <header>
+            <div class="head_top" style="padding-bottom: 0px;">
+                <div class="header">
+
+                    <div class="container-fluid">
+
+                        <div class="row">
+                            <div class="col-lg-2 logo_section">
+                                <div class="full">
+                                    <div class="center-desk">
+                                        <div class="logo">
+                                            @*<!-- <a href="index.html"><img src="images/logo.png" alt="#"></a>-->*@
+                                            <a href="/Home/IndexMain"><h1 style="color: white">THANK-SHOP</h1></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-10">
+                                <div class="right_header_info">
+
+                                    <ul class="form-bar-m1">
+                                        <form action="/home/home2" id="search-bar" method="post">
+                                        <li class="menu_iconb">
+                                            <input style="margin-right: 15px;" class="tetter" placeholder="Search" type="text" name="key" value="@ViewBag.Key">
+                                        </li>
+
+                                        <li class="menu_iconb">
+                                            <a onclick="document.getElementById('search-bar').submit()"><img style="margin-right: 15px;" src="~/images/3.png" /></a>
+                                        </li>
+                                        </form>
+
+                                        @if (Context.Session.GetString("acc") == null)
+                                        {
+                                            <li class="menu_iconb">
+                                                <a href="/Account/login">Log in <img style="margin-right: 15px;" src="~/images/5.png" alt="#" /> </a>
+                                            </li>
+                                        }
+                                        else
+                                        {
+
+                                            <li class="menu_iconb">
+                                                <a href="/Account/logout" onclick="doLogout()">Log out <img style="margin-right: 15px;" src="~/images/5.png" alt="#" />  </a>
+                                            </li>
+                                            <li class="menu_iconb">
+                                                <a href="customer_infor">user name<img style="margin-left: 15px;" src="~/images/6.png" alt="#" /></a>
+                                            </li>
+                                        }
+
+                                        <li class="tytyu">
+                                            <a href="/Order/ViewCart/@ViewBag.OderId"> <img style="margin-right: 15px;" src="~/images/2.png" alt="#" /><span id="numberItems">@ViewBag.sizeCart</span></a>
+                                        </li>
+
+
+                                        <li>
+                                            <button type="button" id="sidebarCollapse">
+                                                <img src="~/images/menu_icon.png" alt="#" />
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </header>
+    </div>
+
+    <div>
+        @RenderBody()
+    </div>
+
+    <div class="overlay"></div>
+    <footer class="">
+        <div class="footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="footer_top">
+                            <div class="row">
+                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                                    <!-- <a href="index.html"> <img class="logo1" src="images/logo1.png" /></a> -->
+                                </div>
+                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                                    <ul class="sociel">
+                                        <li> <a href="#"><i class="fa fa-facebook-f"></i></a></li>
+                                        <li> <a href="#"><i class="fa fa-twitter"></i></a></li>
+                                        <li> <a href="#"><i class="fa fa-instagram"></i></a></li>
+                                        <li> <a href="#"><i class="fa fa-linkedin"></i></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 ">
+                        <div class="row">
+                            <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 ">
+                                <div class="address">
+                                    <h3>Contact us </h3>
+                                    <ul class="loca">
+                                        <li>
+                                            <a href="#"><img src="~/images/loc.png" alt="#" /></a>145 londone
+                                            <br>uk
+                                        </li>
+                                        <li>
+                                            <a href="#"><img src="~/images/call.png" alt="#" /></a>+12586954775
+                                        </li>
+                                        <li>
+                                            <a href="#"><img src="~/images/email.png" alt="#" /></a>demo@gmail.com
+                                        </li>
+
+                                    </ul>
+
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 col-sm-6">
+                                <div class="address">
+                                    <h3>customer service</h3>
+                                    <ul class="Menu_footer">
+                                        <li class="active"> <a href="#">My account</a> </li>
+                                        <li><a href="#">Wishlist</a> </li>
+                                        <li><a href="#">My Cart</a> </li>
+                                        <li><a href="#">Checkout</a> </li>
+                                        <li><a href="#">Login</a> </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 col-sm-6">
+                                <div class="address">
+                                    <h3>corporation</h3>
+                                    <ul class="Links_footer">
+                                        <li class="active"><a href="#">My account</a> </li>
+                                        <li><a href="#">Wishlist</a> </li>
+                                        <li><a href="#">My Cart</a> </li>
+                                        <li><a href="#"> Checkout</a> </li>
+                                        <li><a href="#">Login</a> </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-md-6 col-sm-6 ">
+                                <div class="address">
+                                    <h3>why choose us</h3>
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna </p>
+                                    <form class="newtetter">
+                                        <input class="tetter" placeholder="Your email" type="text" name="Your email">
+                                        <button class="submit">Subscribe</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- sidebar -->
+    @*<script src="~/lib/jquery/dist/jquery.min.js"></script>*@
+
+    @*<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>*@
+    @*<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.slim.min.js"></script>*@
+    @*
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    *@
+    @*<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>*@
+    <!-- Lib -->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nicescroll/3.7.6/jquery.nicescroll.min.js"></script>
+    <script src="~/js/layout/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="~/js/Customs.js"></script>
+    <script src="~/js/layout/custom.js"></script>
+
+
+
+    <!-- Lib end -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#sidebar").mCustomScrollbar({
+                theme: "minimal"
+            });
+
+            $('#dismiss, .overlay').on('click', function () {
+                $('#sidebar').removeClass('active');
+                $('.overlay').removeClass('active');
+            });
+
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').addClass('active');
+                $('.overlay').addClass('active');
+                $('.collapse.in').toggleClass('in');
+                $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $(".fancybox").fancybox({
+                openEffect: "none",
+                closeEffect: "none"
+            });
+
+            $(".zoom").hover(function () {
+
+                $(this).addClass('transition');
+            }, function () {
+
+                $(this).removeClass('transition');
+            });
+        });
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
