@@ -1,0 +1,115 @@
+﻿
+@{
+    ViewData["Title"] = "IndexMain2";
+}
+@section styles{
+    <style>
+        .my-pagination {
+            //display: inline-block;
+            margin-bottom: 70px;
+        }
+
+            .my-pagination a {
+                color: black;
+                font-size: 22px;
+                float: left;
+                padding: 8px 16px;
+                text-decoration: none;
+            }
+
+            .my-pagination a.active {
+                    background-color: #ee3e0f;
+                    color: black;
+            }
+
+            .my-pagination a:hover:not(.active) {
+                    background-color: #ee3e0f;
+            }
+        /* Custom CSS for horizontal alignment */
+        .paginationjs-go-input,
+        .paginationjs-go-button {
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 5px; /* Adjust this margin as needed */
+            margin-top: 13px;
+        }
+        .paginationjs-go-input input{
+            width:34px;
+        }
+        .paginationjs-page.active a {
+            background-color: #ee3e0f;
+        }
+    </style>
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="title">
+            <h2>BRANDS</h2>
+            <input id="curentCategoryId" type="hidden" value="@ViewBag.categoryId" />
+            <ul class="categiri">
+                <li id="0" class="cateid"><a href="/Home/home2/0">ALL</a></li>
+                @*<li id="0" class="cateid @(ViewBag.CurenCid==0?"active":"")" onclick="loadProduct()"><a href="/Home/home2/0">ALL</a></li>
+                    @foreach (Category category in ViewBag.Allcategories)
+                    {
+                        <li id="@category.CategoryId" class="cateid @(ViewBag.CurenCid==category.CategoryId?"active":"")"><a href="/Home/home2/@category.CategoryId">@category.CategoryName</a></li>
+                    }*@
+
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Categories -->
+<div class="Categories">
+    <div class="container">
+
+        <!-- all shoes -->
+        <div id="shoes" class="shoes-bg">
+            <h3>
+            </h3>
+            <div class="row" id="productHome2">
+                @*@foreach (Product product in Model)
+                {
+                    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 margintop">
+                        <div class="shoes-box">
+
+                            <i><img src="~/@product.Image" /></i>
+                            <p><span class="nolmal">@product.ProductName</span></p>
+                            <h4>Price: <span class="nolmal monney" style="color: red">@product.UnitPrice</span>đ<br /><span style="font-size: 70%;">kho:@product.UnitsInStock</span></h4>
+
+                        </div>
+                        <div style="display: flex;">
+                            <a class="buynow" name="buynow" onclick="buynow()">Buy now</a>
+                            <input class="getPid" type="hidden" value="@product.ProductId" />
+                            <a class="buynow" name="addtocard" onclick="buy()">Add to cart</a>
+
+                        </div>
+
+                    </div>
+                }*@
+            </div>
+
+        </div>
+        <!-- end all shoes -->
+        <!--phần phân trang-->
+        <input id="page" type="hidden" value="1" />
+
+        <div class="my-pagination" id="paginationP">
+
+            <div id="demo"></div>
+
+            @*<div id="pagination-container"></div>*@
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts{
+    @*<script src="~/js/order.js"></script>*@
+<script id="token" type="application/json">@Html.Raw(Json.Serialize(Context.Items["token"]))</script>
+    <script src="~/js/indexMain2.js"></script>
+}
+

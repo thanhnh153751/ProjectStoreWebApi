@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BusinessObjects.Entities;
 using DataAccess;
+using DataAccess.ModelViewOdata;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Formatter;
@@ -40,6 +41,21 @@ namespace ProjectManagementAPl.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetProductsByView()
+        {
+            try
+            {
+                var task = repository.ProductTopByView();
+
+                return Ok(_mapper.Map<List<ProductModel>>(task));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return StatusCode(500, "An error occurred while retrieving the product.");
+            }
+        }
 
         [EnableQuery]
         [HttpGet("{id}")]
@@ -66,6 +82,22 @@ namespace ProjectManagementAPl.Controllers
             {
                 var p = await repository.FindProductById(id);
                 var member = _mapper.Map<ProductModelApi>(p);
+                return Ok(member);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return StatusCode(500, "An error occurred while retrieving the product.");
+            }
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetProductByCategoryId(int id)
+        {
+            try
+            {
+                var p = await repository.FindProductByCategoryId(id);
+                var member = _mapper.Map<List<ProductModelApi>>(p);
                 return Ok(member);
             }
             catch (Exception ex)

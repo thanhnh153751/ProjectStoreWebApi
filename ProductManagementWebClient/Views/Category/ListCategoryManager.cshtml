@@ -1,0 +1,203 @@
+﻿@model ProjectManagementAPl.ViewModels.CategoryModelApi
+@{
+    ViewData["Title"] = "ListCategoryManager";
+}
+@section styles{
+    <style>
+        .pagination {
+            /*            display: inline-block;*/
+        }
+
+            .pagination a {
+                color: black;
+                font-size: 22px;
+                float: left;
+                padding: 8px 16px;
+                text-decoration: none;
+            }
+
+                .pagination a.active {
+                    background-color: #ee3e0f;
+                    color: black;
+                }
+
+                .pagination a:hover:not(.active) {
+                    background-color: #ee3e0f;
+                }
+
+        table {
+            text-align: center;
+            margin: 0 auto;
+        }
+
+        tbody, td, tfoot, th, thead, tr {
+            border-width: 1px;
+        }
+
+        button a {
+            text-decoration: none;
+        }
+    </style>
+}
+
+<h1 style="text-align: center">Manager Category</h1>
+
+<!-- toasts -->
+<div class="toast-container">
+</div>
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary ml-5 mb-4" data-toggle="modal" data-target="#CategoryAddModal">
+    ADD NEW CATEGORY
+</button>
+<!-- Modal Create -->
+<div class="modal fade" id="CategoryAddModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Create New Category</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addCategoryForm" name="contact" role="form">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label asp-for="categoryName" class="control-label"></label>
+                            <input asp-for="categoryName" class="form-control" />
+                            <span asp-validation-for="categoryName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="description" class="control-label"></label>
+                            <input asp-for="description" class="form-control" />
+                            <span asp-validation-for="description" class="text-danger"></span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="submitBtn">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Delete -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Are you sure you want to DETELE this Category?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="deleteCategoryForm" name="contact" role="form">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label asp-for="categoryId" class="control-label"></label>
+                            <input id="categoryId-de" class="form-control" readonly />
+                            <span asp-validation-for="categoryId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="categoryName" class="control-label"></label>
+                            <input id="categoryName-de" class="form-control" readonly />
+                            <span asp-validation-for="categoryName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="description" class="control-label"></label>
+                            <input id="description-de" class="form-control" readonly />
+                            <span asp-validation-for="description" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="submitBtn-de">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal Update -->
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Are you sure you want to UPDATE this category?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="contactForm-up" name="contact" role="form">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label asp-for="categoryId" class="control-label"></label>
+                            <input id="categoryId-up" name="categoryId" class="form-control" readonly />
+                            <span asp-validation-for="categoryId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="categoryName" class="control-label"></label>
+                            <input id="categoryName-up" name="categoryName" class="form-control" />
+                            <span asp-validation-for="categoryName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="description" class="control-label"></label>
+                            <input id="description-up" name="description" class="form-control" />
+                            <span asp-validation-for="description" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="submitBtn-up">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="datatable-container" style="width:95%">
+            <table id="productTable" class="display table table-sm table-bordered table-striped" >
+                <!-- Increased width to 80% -->
+                <thead>
+                    <tr>
+                        <th width="1%">
+                            @Html.DisplayNameFor(model => model.categoryId)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.categoryName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.description)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.status)
+                        </th>
+                        <th width="20%">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Data rows will be populated dynamically -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }*@
+    <script id="token" type="application/json">@Html.Raw(Json.Serialize(Context.Items["token"]))</script>
+    <script src="~/js/categoryManager.js"></script>
+}
+

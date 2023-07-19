@@ -12,10 +12,11 @@ namespace DataAccess
         //List<Product> GetProductBySearchPrice(string key);
         //void DeleteProduct(Product p);
         //void UpdateProduct(Product p);
-        //List<Category> GetCategories();
+        List<Product> ProductTopByView();
         Task<IQueryable<Product>> GetAllProducts();
         Task<IQueryable<ProductModel>> GetAllProductest();
         public Task<Product> FindProductById(int id);
+        public Task<List<Product>> FindProductByCategoryId(int id);
         public Task<IQueryable<ProductModel>> FindProductByIdOdata(int id);
         public Task Create(Product model);
         public Task Update(Product model);

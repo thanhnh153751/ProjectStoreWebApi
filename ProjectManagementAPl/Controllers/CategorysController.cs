@@ -61,7 +61,7 @@ namespace ProjectManagementAPl.Controllers
 
         //[Authorize(Roles = "admin@estore.com")]
         [HttpPost]        
-        public async Task<ActionResult<BookViewModel>> postCategory([FromBody] ProductViewModel p)
+        public async Task<ActionResult<CategoryModelApi>> postCategory([FromBody] CategoryModelApi p)
         {
             if (!ModelState.IsValid)
             {
@@ -70,6 +70,7 @@ namespace ProjectManagementAPl.Controllers
             }
             try
             {
+                p.status = true;
                 var member = _mapper.Map<Category>(p);
                 await repository.Create(member);
                 return NoContent();
@@ -82,7 +83,7 @@ namespace ProjectManagementAPl.Controllers
 
         //[Authorize]
         [HttpPut("{id}")]
-        public async Task<IActionResult> putCategory([FromODataUri] int key, [FromBody] ProductViewModel p)
+        public async Task<IActionResult> putCategory([FromODataUri] int id, [FromBody] CategoryModelApi p)
         {
             try
             {
@@ -90,10 +91,11 @@ namespace ProjectManagementAPl.Controllers
                 {
                     return BadRequest(ModelState);
                 }
-                var mep = await repository.FindCategoryById(key);
+                var mep = await repository.FindCategoryById(id);
                 if (mep == null)
                     return NotFound();
 
+                p.status = mep.status;
                 var model = _mapper.Map<Category>(p);
                 await repository.Update(model);
                 return NoContent();
@@ -106,14 +108,14 @@ namespace ProjectManagementAPl.Controllers
 
         //[Authorize(Roles = "admin@estore.com")]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> deleteCategory([FromODataUri] int key)
+        public async Task<IActionResult> deleteCategory([FromODataUri] int id)
         {
             try
             {
-                var p = await repository.FindCategoryById(key);
+                var p = await repository.FindCategoryById(id);
                 if (p == null)
                     return NotFound();
-                await repository.Delete(p.First());
+                await repository.Delete(p);
                 return NoContent();
             }
             catch (Exception)

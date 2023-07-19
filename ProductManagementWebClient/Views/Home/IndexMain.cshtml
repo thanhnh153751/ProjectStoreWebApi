@@ -25,25 +25,61 @@
                 .pagination a:hover:not(.active) {
                     background-color: #ee3e0f;
                 }
+
+        .prev:before {
+            content: "<";
+            color: red;
+            font-size: 52px;
+            position: relative;
+            bottom: -250px;
+            z-index: 1;
+        }
+
+        .prev-view:before {
+            content: "<";
+            color: red;
+            font-size: 52px;
+            position: relative;
+            bottom: -250px;
+            z-index: 1;
+        }
+        .next-view:before {
+            content: ">";
+            color: red;
+            font-size: 52px;
+            float: right;
+            top: -284px;
+            right: -7px;
+            position: relative;
+        }
+        .next:before {
+            content: ">";
+            color: red;
+            font-size: 52px;
+            float: right;
+            top: -284px;
+            right: -7px;
+            position: relative;
+        }
+        .frame-sh {
+            margin-top: -99px;
+        }
+
     </style>
 }
 
 <div class="row">
-
-   
-
     <div class="col-md-12">
         <div class="title">
-            <h2> Categories</h2>
-            <input id="curentId" type="hidden" value="0" />
+            <h2>BRANDS</h2>
             <ul class="categiri">
 
-                <li id="0" class="cateid" onclick="loadProduct()"><a href="/Home/home2/0">ALL</a></li>
-                
-                    <li id="" class="cateid"><a href="#">Cate1</a></li>
-                    <li id="" class="cateid"><a href="#">Cate2</a></li>
-                    <li id="" class="cateid"><a href="#">Cate3</a></li>
-                
+                <li id="0" class="cateid"><a href="/Home/IndexMain2/0">ALL</a></li>
+                @foreach (var item in ViewBag.AllCategory)
+                {
+                    <li id="@item.categoryId" class="cateid"><a href="/Home/IndexMain2/@item.categoryId">@item.categoryName</a></li>
+                }
+
             </ul>
         </div>
     </div>
@@ -81,15 +117,14 @@
     <div class="container">
 
 
-
-
-
         <!-- news shoes -->
         <div id="shoes" class="shoes-bg">
-            <h3>New shoes</h3>
-            <div class="row">
-                <div class="row">
-                    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 ">
+            <h3>top 10 new shoes</h3>
+            <div class="frame-sh">
+                <div class="prev"></div>
+                <div  class="row new-shoes" id="data_newshoes">
+
+                    @*<div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 ">
                         <div class="shoes-box">
 
                             <i><img src="/images/Nike-Air-Zoom-Pegasus-35-xanh-duong-replica-7-800x600.jpg"></i>
@@ -104,101 +139,37 @@
 
                         </div>
 
-                    </div>
-                    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 ">
-                        <div class="shoes-box">
-
-                            <i><img src="/images/Nike-Blazer-Mid-77-Vintage-White-Black-800x600.jpg"></i>
-
-                            <p class="nolmal">Nike Blazer Mid 77 Vintage</p>
-                            <h4>Price: <span class="nolmal monney" style="color: red">798000</span>đ <br><span style="font-size: 70%;">kho:43</span></h4>
-                        </div>
-                        <div style="display: flex;">
-                            <a class="buynow" name="buynow" onclick="buynow()">Buy now</a>
-                            <input class="getPid" type="hidden" value="18">
-                            <a class="buynow" name="addtocard" onclick="buy()">Add to cart</a>
-
-                        </div>
-
-                    </div>
-                    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 ">
-                        <div class="shoes-box">
-
-                            <i><img src="/images/Nike-Blazer-Low-77-Vintage-White-Black-800x600.jpg"></i>
-
-                            <p class="nolmal">Nike Blazer Low 77 Vintage</p>
-                            <h4>Price: <span class="nolmal monney" style="color: red">798000</span>đ <br><span style="font-size: 70%;">kho:17</span></h4>
-                        </div>
-                        <div style="display: flex;">
-                            <a class="buynow" name="buynow" onclick="buynow()">Buy now</a>
-                            <input class="getPid" type="hidden" value="17">
-                            <a class="buynow" name="addtocard" onclick="buy()">Add to cart</a>
-
-                        </div>
-
-                    </div>
-                    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 ">
-                        <div class="shoes-box">
-
-                            <i><img src="/images/Nike-Blazer-Low-Paisley-Swoosh-800x600.jpg"></i>
-
-                            <p class="nolmal">Nike Blazer Low Paisley</p>
-                            <h4>Price: <span class="nolmal monney" style="color: red">898000</span>đ <br><span style="font-size: 70%;">kho:27</span></h4>
-                        </div>
-                        <div style="display: flex;">
-                            <a class="buynow" name="buynow" onclick="buynow()">Buy now</a>
-                            <input class="getPid" type="hidden" value="16">
-                            <a class="buynow" name="addtocard" onclick="buy()">Add to cart</a>
-
-                        </div>
-
-                    </div>
+                    </div>*@                   
                 </div>
+                <div class="next"></div>
             </div>
-
-
         </div>
 
         <div id="shoes" class="shoes-bg">
-            <h3>MostView shoes</h3>
-            <div class="row" id="productmostview">
+            <h3>Top 10 Most View shoes</h3>
+            <div class="frame-sh" id="productmostview">
 
-                <div class="row" id="productmostview">
-                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 margintop">
-                    <div class="shoes-box"><i>
-                        <img src="/images/nike_air_force_1.jpg"></i>
-                    <p>
-                        <span class="nolmal">Nike Air Force 1</span>
-                    </p><h4>Price: <span class="nolmal monney" style="color: red">798000</span>đ <br>
-                        <span style="font-size: 70%;">kho:18</span></h4></div><div style="display: flex;">
-                    <a class="buynow" onclick="buynow()">Buy now</a><a class="buynow" onclick="buypn()">Add to cart</a></div> 
-                </div>
-                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 margintop">
-                    <div class="shoes-box">
-                    <i><img src="/images/Jordan_1_Retro.jpg"></i>
-                    <p><span class="nolmal">Nike Air Jordan 1 Retro</span></p>
-                    <h4>Price: <span class="nolmal monney" style="color: red">1190000</span>đ 
-                    <br>
-                    <span style="font-size: 70%;">kho:28</span></h4>
-                    </div><div style="display: flex;"><a class="buynow" onclick="buynow()">Buy now</a>
-                    <a class="buynow" onclick="buypn()">Add to cart</a></div> 
-                </div>
-                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 margintop">
-                    <div class="shoes-box"><i><img src="/images/Jordan_6_Retro.jpg"></i>
-                    <p><span class="nolmal">Nike Air Jordan 6 Retro</span></p>
-                    <h4>Price: <span class="nolmal monney" style="color: red">1690000</span>đ <br><span style="font-size: 70%;">kho:24</span></h4></div>
-                    <div style="display: flex;"><a class="buynow" onclick="buynow()">Buy now</a><a class="buynow" onclick="buypn()">Add to cart</a></div> 
-                </div>
-                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 margintop">
-                    <div class="shoes-box"><i><img src="/images/Nike_Kwondo.jpg"></i>
-                    <p><span class="nolmal">Nike Kwondo1</span></p>
-                    <h4>Price: <span class="nolmal monney" style="color: red">1490000</span>đ <br><span style="font-size: 70%;">kho:13</span></h4>
-                    </div>
-                    <div style="display: flex;"><a class="buynow" onclick="buynow()">Buy now</a>
-                    <a class="buynow" onclick="buypn()">Add to cart</a></div> 
-                </div>
+                <div class="prev-view"></div>
+                <div class="row view-shoes" id="data_viewTopShoes">
 
+                    @*<div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 margintop">
+                        <div class="shoes-box">
+                            <i>
+                                <img src="/images/nike_air_force_1.jpg">
+                            </i>
+                            <p>
+                                <span class="nolmal">Nike Air Force 1</span>
+                            </p><h4>
+                                Price: <span class="nolmal monney" style="color: red">798000</span>đ <br>
+                                <span style="font-size: 70%;">kho:18</span>
+                            </h4>
+                        </div><div style="display: flex;">
+                            <a class="buynow" onclick="buynow()">Buy now</a><a class="buynow" onclick="buypn()">Add to cart</a>
+                        </div>
+                    </div>*@
+                                                        
                 </div>
+                <div class="next-view"></div>
             </div>
         </div>
     </div>
@@ -208,9 +179,23 @@
 
 
 @section Scripts{
+    <script src="~/js/indexMain.js"></script>
+    <script>
+        // Function to add Font Awesome icons to Slick carousel buttons
+        function addFontAwesomeIconsToSlickButtons() {
+            const prevButton = document.querySelector('.slick-prev');
+            const nextButton = document.querySelector('.slick-next');
 
-    <script type="text/javascript">
+            if (prevButton && nextButton) {
+                console.log("???");
+                // Add Font Awesome icons to the buttons
+                prevButton.innerHTML = '<i class="fas fa-chevron-left"></i>';
+                nextButton.innerHTML = '<i class="fas fa-chevron-right"></i>';
+            }
+        }
 
+        // Wait for the content to load before applying the Font Awesome icons
+        document.addEventListener('DOMContentLoaded', addFontAwesomeIconsToSlickButtons);
     </script>
 }
 

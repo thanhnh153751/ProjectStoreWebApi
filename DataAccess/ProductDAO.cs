@@ -75,6 +75,31 @@ namespace DataAccess
 
         }
 
+        public static async Task<List<Product>> FindProductByCategoryId(int id)
+        {
+            try
+            {               
+                using (var context = new ApplicationDBContext())
+                {
+                    if(id == 0)
+                    {
+                        var list = await context.Product.ToListAsync();
+                        return list;
+                    }
+                    else
+                    {
+                        var list = await context.Product.Where(x => x.categoryId == id).ToListAsync();
+                        return list;
+                    }                    
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+
+        }
+
         public static async Task<Product> FindProductById(int id)
         {
             try
@@ -139,38 +164,39 @@ namespace DataAccess
             }
         }
 
-        //public static List<Product> FindProductBySearch(string key)
-        //{
-        //    var listProducts = new List<Product>();
-        //    decimal price;
-        //    try
-        //    {
-        //        //if (decimal.TryParse(key,out price))
-        //        //{
-        //        //    using (var context = new Prn231As1Context())
-        //        //    {
-        //        //        listProducts = context.Products.Where(p => p.UnitPrice == price).ToList();
-        //        //    }
-        //        //}
-        //        //else
-        //        //{
-        //        //    using (var context = new Prn231As1Context())
-        //        //    {
-        //        //        listProducts = context.Products.Where(p => p.ProductName.Contains(key)).ToList();
-        //        //    }
-        //        //}
-        //        using (var context = new Prn231As1Context())
-        //        {
-        //            listProducts = context.Products.Where(p => p.ProductName.Contains(key)).ToList();
-        //        }
+        public static List<Product> FindProductTopByView()
+        {
+            var listProducts = new List<Product>();          
+            try
+            {               
+                using (var context = new ApplicationDBContext())
+                {
+                    listProducts = context.Product
+                .Join(context.ViewProduct,
+                    product => product.productId,
+                    viewProduct => viewProduct.productId,
+                    (product, viewProduct) => new { Product = product, ViewProduct = viewProduct })
+                .GroupBy(pv => pv.Product.productId, (key, g) => new ProductViewCount
+                {
+                    ProductId = key,
+                    TotalViewNumber = g.Sum(pv => pv.ViewProduct.viewNumber ?? 0)
+                })
+                .OrderByDescending(pv => pv.TotalViewNumber)
+                .Take(10)
+                .Join(context.Product,
+                    pv => pv.ProductId,
+                    product => product.productId,
+                    (pv, product) => product)
+                .ToList();
+                }
 
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        throw new Exception(e.Message);
-        //    }
-        //    return listProducts;
-        //}
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+            return listProducts;
+        }
 
         //public static List<Product> FindProductBySearchPrice(string key)
         //{

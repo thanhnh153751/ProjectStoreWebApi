@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using eBookStore.ResponseModel;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using ProductManagementWebClient.Models;
 using ProjectManagementAPl.Models;
+using ProjectManagementAPl.ViewModels;
 using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
@@ -16,7 +18,7 @@ namespace ProductManagementWebClient.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        Uri baseAddress = new Uri("https://localhost:7012/api");
+        Uri baseAddress = new Uri("https://localhost:7012/");
         private readonly HttpClient _httpClient;
 
         public HomeController(ILogger<HomeController> logger, HttpClient httpClient)
@@ -32,12 +34,34 @@ namespace ProductManagementWebClient.Controllers
 
         public IActionResult IndexMain()
         {
+            var allCategory = getAllCategory();
+            ViewBag.AllCategory = allCategory;
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult IndexMain2(int categoryId)
+        {
+            ViewBag.categoryId = categoryId;
             return View();
         }
 
         public IActionResult Privacy()
         {
             return View();
+        }
+
+        public List<CategoryModelApi> getAllCategory()
+        {           
+            HttpResponseMessage responseMessage = _httpClient.GetAsync(baseAddress + "odata/Categorys").Result;
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                string data = responseMessage.Content.ReadAsStringAsync().Result;
+                var responseObject = JsonConvert.DeserializeObject<ODataResponse<CategoryModelApi>>(data);
+                var list = responseObject.Value;
+                return list;
+            }
+            return new List<CategoryModelApi>();
         }
 
         [HttpPost]

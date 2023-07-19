@@ -45,6 +45,16 @@ namespace Repositories
             return book.AsQueryable();
         }
 
+        public async Task<List<Product>> FindProductByCategoryId(int id)
+        {
+            return await ProductDAO.FindProductByCategoryId(id);
+        }
+
+        public List<Product> ProductTopByView()
+        {
+            return ProductDAO.FindProductTopByView();
+        }
+
 
 
         //public List<Category> GetCategories()

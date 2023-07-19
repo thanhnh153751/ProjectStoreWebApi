@@ -21,7 +21,7 @@ namespace DataAccess
             {
                 using (var context = new ApplicationDBContext())
                 {
-                    list = await context.Category.ToListAsync();
+                    list = await context.Category.Where(x => x.status == true).ToListAsync();
                 }
             }
             catch (Exception e)
@@ -37,7 +37,7 @@ namespace DataAccess
             {
                 using (var context = new ApplicationDBContext())
                 {
-                    var model = await context.Category.SingleOrDefaultAsync(x => x.categoryId == id && x.status == true);
+                    var model = await context.Category.SingleOrDefaultAsync(x => x.categoryId == id && x.status==true);
                     return model;
                 }
             }
@@ -84,7 +84,8 @@ namespace DataAccess
                 {
                     var p1 = context.Category.SingleOrDefault(
                     c => c.categoryId == p.categoryId);
-                    context.Category.Remove(p1);
+                    p1.status = false;
+                    //context.Category.Remove(p1);
                     await context.SaveChangesAsync();
                 }
             }
