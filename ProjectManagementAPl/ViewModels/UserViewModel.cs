@@ -1,19 +1,25 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProjectManagementAPl.ViewModels
 {
     public class UserViewModel
     {
-        public int user_id { get; set; }
-        public string email_address { get; set; }
+        public int customerId { get; set; }
+        [StringLength(100)]
+        public string? contactName { get; set; }
+        [StringLength(200)]
+        public string? address { get; set; }
+        [StringLength(20)]
+        public string? phone { get; set; }
+        [StringLength(50)]
+        public string username { get; set; }
+        [StringLength(50)]
         public string password { get; set; }
-        public string source { get; set; }
-        public string first_name { get; set; }
-        public string middle_name { get; set; }
-        public string last_name { get; set; }
-        public int role_id { get; set; }
-        public int? pub_id { get; set; }
-        public DateTime? hire_date { get; set; }
+        [StringLength(200)]
+        public string? image { get; set; }
+        public int? roleId { get; set; }
+        public int? status { get; set; }
 
     }
 }

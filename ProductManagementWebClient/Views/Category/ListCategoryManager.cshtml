@@ -197,7 +197,7 @@
 
 @section Scripts {
     @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }*@
-    <script id="token" type="application/json">@Html.Raw(Json.Serialize(Context.Items["token"]))</script>
+    @*<script id="token" type="application/json">@Html.Raw(Json.Serialize(Context.Items["token"]))</script>*@
     <script src="~/js/categoryManager.js"></script>
 }
 

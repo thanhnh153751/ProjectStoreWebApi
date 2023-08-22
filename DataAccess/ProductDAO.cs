@@ -83,12 +83,12 @@ namespace DataAccess
                 {
                     if(id == 0)
                     {
-                        var list = await context.Product.ToListAsync();
+                        var list = await context.Product.Where(x => x.status == true).ToListAsync();
                         return list;
                     }
                     else
                     {
-                        var list = await context.Product.Where(x => x.categoryId == id).ToListAsync();
+                        var list = await context.Product.Where(x => x.categoryId == id && x.status == true).ToListAsync();
                         return list;
                     }                    
                 }

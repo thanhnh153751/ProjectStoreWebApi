@@ -40,9 +40,12 @@ namespace ProductManagementWebClient.Controllers
         }
 
         [HttpGet]
-        public IActionResult IndexMain2(int categoryId)
+        public IActionResult IndexMain2(int id,string key)
         {
-            ViewBag.categoryId = categoryId;
+            var allCategory = getAllCategory();
+            ViewBag.AllCategory = allCategory;
+            ViewBag.categoryId = id;
+            ViewBag.keySearch = key;
             return View();
         }
 

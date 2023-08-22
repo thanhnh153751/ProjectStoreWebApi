@@ -1,7 +1,5 @@
-﻿using AutoMapper;
-using BusinessObjects;
+﻿using BusinessObjects;
 using BusinessObjects.Entities;
-using DataAccess.ModelViewOdata;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess
@@ -23,7 +21,7 @@ namespace DataAccess
                         var newOrder = new Order
                         {
                             customerId = customerId,
-                            orderDate = DateTime.Now,
+                            orderDate = null,
                             requiredDate = DateTime.Now,
                             status = "processing",
                             totalmoney = 0 // Initialize totalmoney to 0 for now
@@ -42,6 +40,8 @@ namespace DataAccess
                             unitPrice = context.Product.Find(productId).unitPrice
                         };
                         context.OrdersDetail.Add(newOrderDetail);
+                        //Save
+                        await context.SaveChangesAsync();
                     }
                     else
                     {
@@ -65,13 +65,15 @@ namespace DataAccess
                             // If the product already exists, increase the quantity by 1
                             existingOrderDetail.quantity += 1;
                         }
+                        await context.SaveChangesAsync();
                     }
 
                     // Calculate the totalmoney for the order based on the quantity and unitPrice of each product
+                    var openNewOrder = context.Order.FirstOrDefault(o => o.customerId == customerId && o.status == "processing");
                     var orderTotal = context.OrdersDetail
-                        .Where(od => od.orderId == openOrder.orderId)
+                        .Where(od => od.orderId == openNewOrder.orderId)
                         .Sum(od => od.quantity * od.unitPrice);
-                    openOrder.totalmoney = orderTotal;
+                    openNewOrder.totalmoney = orderTotal;
 
                     // Save changes to the database
                     await context.SaveChangesAsync();
@@ -84,69 +86,313 @@ namespace DataAccess
             return true; // Return true to indicate successful processing
         }
 
-        //public static async Task<Category> FindCategoryById(int id)
-        //{
-        //    try
-        //    {
-        //        using (var context = new ApplicationDBContext())
-        //        {
-        //            var model = await context.Category.SingleOrDefaultAsync(x => x.categoryId == id && x.status==true);
-        //            return model;
-        //        }
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        throw new Exception(e.Message);
-        //    }
+        public static async Task<int> GetSizeCart(int customerId)
+        {
+            try
+            {
+                using (var context = new ApplicationDBContext())
+                {
+                    var openOrder = context.Order.FirstOrDefault(o => o.customerId == customerId && o.status == "processing");
+                    int size = 0;
+                    if (openOrder != null)
+                    {
+                        size = await context.OrdersDetail.Where(od => od.orderId == openOrder.orderId).CountAsync();
+                    }
+                    return size;
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
 
-        //}
+        }
 
-        //public static async Task Create(Category b)
-        //{
+        public static async Task<List<int>> GetAllYearInOrderDate()
+        {
+            try
+            {
+                using (var context = new ApplicationDBContext())
+                {
+                 var years = await context.Order
+                .Where(o => o.orderDate.HasValue) // Lọc chỉ lấy các bản ghi có orderDate không null
+                .Select(o => o.orderDate.Value.Year)
+                .Distinct()
+                .ToListAsync();
 
-        //    using (var context = new ApplicationDBContext())
-        //    {
-        //        context.Category.Add(b);
-        //        await context.SaveChangesAsync();
-        //    }
-        //}
+                    return years;
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
 
-        //public static async Task Update(Category p)
-        //{
-        //    try
-        //    {
-        //        using (var context = new ApplicationDBContext())
-        //        {
-        //            context.Entry<Category>(p).State =
-        //                Microsoft.EntityFrameworkCore.EntityState.Modified;
-        //            await context.SaveChangesAsync();
-        //        }
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        throw new Exception(e.Message);
-        //    }
-        //}
+        }
+        public static async Task<List<int>> GetRevenueForMonth(int month,int year)
+        {
+            using (var context = new ApplicationDBContext())
+            {
+                var startDate = new DateTime(year, month, 1);
+                var endDate = startDate.AddMonths(1).AddTicks(-1);
+
+                var revenueByDate = await context.Order
+                    .Where(o => o.orderDate >= startDate && o.orderDate <= endDate && o.totalmoney.HasValue)
+                    .GroupBy(o => o.orderDate.Value.Date)
+                    .Select(g => new { Date = g.Key.Date, Revenue = g.Sum(o => o.totalmoney.Value) })
+                    .ToDictionaryAsync(item => item.Date, item => item.Revenue);
+
+                // Create a list to store the revenue for each day in the month
+                var revenueList = new List<int>();
+
+                // Iterate through all days in the month and check if revenue is available for that day
+                for (int day = 1; day <= DateTime.DaysInMonth(year, month); day++)
+                {
+                    var currentDate = new DateTime(year, month, day);
+                    var revenue = revenueByDate.ContainsKey(currentDate.Date) ? revenueByDate[currentDate.Date] : 0;
+                    revenueList.Add(revenue);
+                }
+
+                return revenueList;
+            }
+
+        }
+
+        public static async Task<List<OrdersDetail>> GetCartByCustomerId(int customerId)
+        {
+
+            using (var context = new ApplicationDBContext())
+            {
+                var openOrder = context.Order.FirstOrDefault(o => o.customerId == customerId && o.status == "processing");
+                if (openOrder != null)
+                {
+                    context.Product.ToList();
+                    context.Order.ToList();
+                    var list = await context.OrdersDetail.Where(x => x.orderId == openOrder.orderId).ToListAsync();
+                    return list;
+                }
+                return new List<OrdersDetail>();
+            }
+        }
+
+        public static async Task<bool> ChangeQuantityInCart(int customerId, int productId, bool sign)
+        {
+
+            using (var context = new ApplicationDBContext())
+            {
+                var openOrder = context.Order.FirstOrDefault(o => o.customerId == customerId && o.status == "processing");
+                if (openOrder != null)
+                {
+                    // sing +
+                    if (sign)
+                    {
+                        var unitInStock = context.Product.Find(productId).unitsInStock;
+                        var model = await context.OrdersDetail.SingleOrDefaultAsync(x => x.orderId == openOrder.orderId && x.productId == productId);
+                        if (model.quantity < unitInStock)
+                        {
+                            model.quantity += 1;
+                            await context.SaveChangesAsync();
+                        }
+                    }
+                    // sing -
+                    else
+                    {
+                        var model = await context.OrdersDetail.SingleOrDefaultAsync(x => x.orderId == openOrder.orderId && x.productId == productId);
+                        if (model.quantity == 1)
+                        {
+                            context.OrdersDetail.Remove(model);
+
+                        }
+                        else
+                        {
+                            model.quantity -= 1;
+                        }
+                        await context.SaveChangesAsync();
+                    }
+                    // caculate totak
+                    var orderTotal = context.OrdersDetail
+                        .Where(od => od.orderId == openOrder.orderId)
+                        .Sum(od => od.quantity * od.unitPrice);
+                    openOrder.totalmoney = orderTotal;
+                    await context.SaveChangesAsync();
+                    return true;
+                }
+                return false;
+            }
+        }
+
+        public static async Task<bool> RemoveFromCart(int customerId, int productId)
+        {
+
+            try
+            {
+                using (var context = new ApplicationDBContext())
+                {
+                    var openOrder = context.Order.FirstOrDefault(o => o.customerId == customerId && o.status == "processing");
+                    if (openOrder != null)
+                    {
+                        var model = await context.OrdersDetail.SingleOrDefaultAsync(x => x.orderId == openOrder.orderId && x.productId == productId);
+
+                        context.OrdersDetail.Remove(model);
+                        await context.SaveChangesAsync();
+
+                        // caculate totak
+                        var orderTotal = context.OrdersDetail
+                            .Where(od => od.orderId == openOrder.orderId)
+                            .Sum(od => od.quantity * od.unitPrice);
+                        openOrder.totalmoney = orderTotal;
+                        await context.SaveChangesAsync();
+                        return true;
+                    }                    
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            return false;
+        }
+
+        public static async Task SentRequestOrder(int customerId)
+        {
+            try
+            {
+                using (var context = new ApplicationDBContext())
+                {
+                    var openOrder = context.Order.FirstOrDefault(o => o.customerId == customerId && o.status == "processing");
+                    if (openOrder != null)
+                    {
+                        openOrder.status = "pending";
+                        await context.SaveChangesAsync();
+                    }
+                    
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public static async Task<bool> ApprovalRequestOrderByOrderId(int orderId)
+        {
+            try
+            {
+                using (var context = new ApplicationDBContext())
+                {
+                    var openOrder = context.Order.FirstOrDefault(o => o.orderId == orderId && o.status == "pending");
+                    if (openOrder != null)
+                    {
+                        openOrder.status = "approval";
+                        openOrder.orderDate = DateTime.Now;
+                        await context.SaveChangesAsync();
+                        return true;
+                    }
+
+                }
+                return false;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
 
 
-        //public static async Task Delete(Category p)
-        //{
-        //    try
-        //    {
-        //        using (var context = new ApplicationDBContext())
-        //        {
-        //            var p1 = context.Category.SingleOrDefault(
-        //            c => c.categoryId == p.categoryId);
-        //            p1.status = false;
-        //            //context.Category.Remove(p1);
-        //            await context.SaveChangesAsync();
-        //        }
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        throw new Exception(e.Message);
-        //    }
-        //}      
+        public static async Task<List<Order>> GetAllHistoryOrderByCumtomerId(int customerId)
+        {
+            try
+            {
+                using (var context = new ApplicationDBContext())
+                {
+                    context.Customer.ToList();
+                    var openOrder = await context.Order.Where(o => o.customerId == customerId && (o.status == "pending" || o.status == "approval") ).ToListAsync();
+                    return openOrder;
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public static async Task<List<Order>> GetAllHistoryOrderApprpved()
+        {
+            try
+            {
+                using (var context = new ApplicationDBContext())
+                {
+                    context.Customer.ToList();
+                    var openOrder = await context.Order.Where(o => o.status == "approval").ToListAsync();
+                    return openOrder;
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public static async Task<List<Order>> GetAllHistoryOrderPending()
+        {
+            try
+            {
+                using (var context = new ApplicationDBContext())
+                {
+                    context.Customer.ToList();
+                    var openOrder = await context.Order.Where(o => o.status == "pending").ToListAsync();
+                    return openOrder;
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public static async Task<List<OrdersDetail>> GetOrderDetailByOrderId(int orderId)
+        {
+            try
+            {
+                using (var context = new ApplicationDBContext())
+                {
+                    context.Product.ToList();
+                    var openOrder = await context.OrdersDetail.Where(o => o.orderId == orderId).ToListAsync();
+                    return openOrder;
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public static async Task<bool> DeleteOrderByOrderId(int orderId)
+        {
+            try
+            {
+                using (var context = new ApplicationDBContext())
+                {
+                    var openOrder = await context.Order.SingleOrDefaultAsync(o => o.orderId == orderId && o.status == "pending");
+                    if (openOrder != null)
+                    {
+                        var openOrderDetail = await context.OrdersDetail.Where(o => o.orderId == orderId).ToListAsync();
+                        context.OrdersDetail.RemoveRange(openOrderDetail);
+                        context.SaveChanges();
+
+                        context.Order.Remove(openOrder);
+                        context.SaveChanges();
+                        return true;
+                    }
+                    else return false;                   
+                                    
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
     }
 
 }

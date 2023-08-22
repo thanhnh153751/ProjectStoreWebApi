@@ -3,13 +3,9 @@ using System.ComponentModel;
 
 namespace ProjectManagementAPl.Models
 {
-    public class UserRegiter
+    public class UserLogin
     {
-        [Required]
-        public string Email { get; set; }
-        [Required]
-        public string Password { get; set; }
-        [Required]
-        public string PasswordConfirm { get; set; }
+        public string email { get; set; }
+        public string password { get; set; }
     }
 }

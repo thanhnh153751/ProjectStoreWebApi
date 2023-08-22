@@ -9,10 +9,11 @@
             type: "get",
             contentType: "application/json; charset=utf-8",
             headers: {
-                "Authorization": "Bearer" + token
+                "Authorization": "Bearer " + token
             },
             success: function (result, status, xhr) {
                 // Populate the table with data
+                //console.log(token);
                 $.each(result.value, function (index, value) {
                     $("tbody").append($("<tr>"));
                     appendElement = $("tbody tr").last();

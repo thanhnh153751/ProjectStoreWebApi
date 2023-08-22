@@ -9,7 +9,7 @@
     <link href="~/css/layout/responsive.css" rel="stylesheet" />
     <link href="~/css/layout/jquery.mCustomScrollbar.min.css" rel="stylesheet" />
     <link href="~/css/layout/styleHome.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <!-- Bootstrap Select CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
@@ -17,6 +17,11 @@
     @RenderSection("styles", false)
 </head>
 <body>
+    @{
+        var id = @Context.Items["idMember"] ?? 0;
+        var roleId = @Context.Items["roleId"] ?? 0;
+        var emailUser = @Context.Items["emailUser"] ?? null;
+    }
     <div class="sidebar">
         @*<!-- Sidebar  -->*@
         <nav id="sidebar">
@@ -26,22 +31,40 @@
             </div>
 
             <ul class="list-unstyled components">
-                <li class="">
-                    <a href="/Category/ListCategoryManager">Manager Category</a>
-                </li>
-                <li class="">
-                    <a href="/Product/ListProductManager">Manager Product</a>
-                </li>
-                <li class="">
-                    <a href="/Account/listAccountManager">Manager Customer</a>
-                </li>
+                @if (roleId.Equals("1"))
+                {
+                    <li class="">
+                        <a href="/Category/ListCategoryManager">Manager Category</a>
+                    </li>
+                    <li class="">
+                        <a href="/Product/ListProductManager">Manager Product</a>
+                    </li>
+                    <li class="">
+                        <a href="/Order/GetAllHistoryOrderApproved">History Order Approved</a>
+                    </li>
+                    <li class="">
+                        <a href="/Order/GetAllHistoryOrderPending">History Order Pending</a>
+                    </li>
+                    <li class="">
+                        <a href="/Dashboad/ShowDashboad">Dashboad</a>
+                    </li>
+                }
 
 
-                <li class="">
-                    <a href="/Account/listOrderByAccountByCid/">History Order</a>
-                </li>
+                @*<li class="">
+          <a href="/Account/listAccountManager">Manager Customer</a>
+        </li>*@
 
-            </ul>
+                @if (roleId.Equals("2"))
+                { 
+                <li class="">
+                    <a href="/Order/GetAllHistoryOrderByCumtomerId">My History Order</a>
+                </li>
+                }
+                    
+
+
+                </ul>
 
         </nav>
     </div>
@@ -68,44 +91,46 @@
                                 <div class="right_header_info">
 
                                     <ul class="form-bar-m1">
-                                        <form action="/home/home2" id="search-bar" method="post">
-                                        
-                                        <li>
-                                            <div class="p-1 bg-light rounded rounded-pill shadow-sm mb-4" id="search-box-head">
+
+                                        <li id="search-box-head">
+                                            <div class="p-1 bg-light rounded rounded-pill shadow-sm mb-4">
                                                 <div class="input-group">
-                                                    <input type="search" placeholder="What're you searching for?" aria-describedby="button-addon1" class="form-control border-0 bg-light">
+                                                    <input type="search" id="searchInput" placeholder="What're you searching for?" aria-describedby="button-addon1" class="form-control border-0 bg-light" value="">
                                                     <div class="input-group-append">
-                                                        <button id="button-addon1" type="submit" class="btn btn-link text-primary"><i class="fa fa-search"></i></button>
+                                                        <button id="searchButton" type="button" class="btn btn-link text-primary" onclick="searchAndNavigate()"><i class="fa fa-search"></i></button>
                                                     </div>
                                                 </div>
                                             </div>
                                         </li>
-                                        
-                                        </form>
 
-                                        @if (Context.Session.GetString("acc") == null)
+
+                                        <li class="tytyu" id="cartTopIcon">
+                                            <a href="/Order/ListShoppingCart">
+                                                <img src="~/images/2.png" alt="#" />
+                                                <span id="numberItems">0</span>
+                                            </a>
+                                        </li>
+
+                                        @if (emailUser == null)
                                         {
-                                            <li class="menu_iconb">
-                                                <a href="/Account/login">Log in <img style="margin-right: 15px;" src="~/images/5.png" alt="#" /> </a>
+                                            <li class="menu_iconb-login">
+                                                @*<img src="~/images/5.png" alt="#" />*@
+                                                <a href="/Login/LoginRegister">Login<i class="fas fa-sign-in-alt" style="color: #ffffff;"></i></a>
                                             </li>
+
                                         }
                                         else
                                         {
+                                            <li class="menu_iconb" id="emailTopIcon">
+                                                <a href="/Customer/CustomerDetail">@emailUser</a>
+                                            </li>
+                                            <li class="menu_iconb" id="logoutTopIcon">
+                                                <a href="/Login/LogOut" onclick="doLogout()">Logout<i class="fas fa-sign-out-alt" style="color: #000000;"></i></a>
+                                            </li>
 
-                                            <li class="menu_iconb">
-                                                <a href="/Account/logout" onclick="doLogout()">Log out <img style="margin-right: 15px;" src="~/images/5.png" alt="#" />  </a>
-                                            </li>
-                                            <li class="menu_iconb">
-                                                <a href="customer_infor">user name<img style="margin-left: 15px;" src="~/images/6.png" alt="#" /></a>
-                                            </li>
                                         }
 
-                                        <li class="tytyu">
-                                            <a href="/Order/ViewCart/@ViewBag.OderId"> <img style="margin-right: 15px;" src="~/images/2.png" alt="#" /><span id="numberItems">@ViewBag.sizeCart</span></a>
-                                        </li>
-
-
-                                        <li>
+                                        <li id="side-bar-top">
                                             <button type="button" id="sidebarCollapse">
                                                 <img src="~/images/menu_icon.png" alt="#" />
                                             </button>
@@ -114,6 +139,7 @@
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
 
@@ -138,7 +164,7 @@
                                 </div>
                                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
                                     <ul class="sociel">
-                                        <li> <a href="#"><i class="fa fa-facebook-f"></i></a></li>
+                                        <li> <a href="#"><i class="fab fa-facebook" style="color: #ffffff;"></i></a></li>
                                         <li> <a href="#"><i class="fa fa-twitter"></i></a></li>
                                         <li> <a href="#"><i class="fa fa-instagram"></i></a></li>
                                         <li> <a href="#"><i class="fa fa-linkedin"></i></a></li>
@@ -250,10 +276,7 @@
                 $('.collapse.in').toggleClass('in');
                 $('a[aria-expanded=true]').attr('aria-expanded', 'false');
             });
-        });
-    </script>
-    <script>
-        $(document).ready(function () {
+
             $(".fancybox").fancybox({
                 openEffect: "none",
                 closeEffect: "none"
@@ -266,8 +289,69 @@
 
                 $(this).removeClass('transition');
             });
+
         });
     </script>
+
+    <script id="customerId" type="application/json">@Html.Raw(Json.Serialize(Context.Items["idMember"]))</script>
+    <script id="token" type="application/json">@Html.Raw(Json.Serialize(Context.Items["token"]))</script>
+    <script>
+        $(document).ready(function () {
+            var customerId = JSON.parse($("#customerId").html());
+            handleGetSizeCart();
+            function handleGetSizeCart() {
+
+                $.ajax({
+                    url: "https://localhost:7012/api/Orders/GetSizeCart/" + customerId,
+                    type: "GET",
+                    contentType: "application/json; charset=utf-8",
+                    headers: {
+                        "Authorization": "Bearer" + token
+                    },
+                    success: function (cartSizeData) {
+                        //console.log("GetSizeCart :", cartSizeData);
+                        updateCartSize(cartSizeData);
+                    },
+                    error: function (error) {
+
+                        console.log("GetSizeCart error:", error);
+                    }
+                });
+            }
+            function updateCartSize(cartSize) {
+                $("#numberItems").text("");
+                $("#numberItems").text(cartSize);
+            }
+        });
+
+        function searchAndNavigate() {
+            // Lấy giá trị từ thẻ input và cắt khoảng trống đầu và cuối
+            var searchValue = document.getElementById("searchInput").value.trim();
+
+            // Kiểm tra nếu giá trị là rỗng thì không thực hiện chuyển hướng
+            if (searchValue === "") {
+                return;
+            }
+
+
+            var currentUrl = window.location.href;
+            var targetUrl = "/Home/IndexMain2/0/" + encodeURIComponent(searchValue);
+
+            if (currentUrl.indexOf("/Home/IndexMain2") === -1) {
+                window.location.href = targetUrl;
+            }
+        }
+
+        // Xử lý sự kiện nhấn phím Enter trong thẻ input
+        document.getElementById("searchInput").addEventListener("keyup", function (event) {
+            if (event.keyCode === 13) {
+                searchAndNavigate();
+            }
+        });
+
+    </script>
+
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

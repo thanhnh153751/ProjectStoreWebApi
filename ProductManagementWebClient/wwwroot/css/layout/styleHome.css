@@ -1261,14 +1261,7 @@ nav.main-menu {
                 font-weight: 300;
             }
 
-#search-box-head {
-    width: 457px;
-    position: relative;
-    right: 287px;
-}
-#search-box-head input {
-    left:7px;
-}
+
 
 .slider_cont_section h4 {
     color: #f36b2a;
@@ -2293,6 +2286,49 @@ a.article:hover {
 #numberItems{
     background-color: white;
     border-radius: 7px;
-    color: white;
+    color: black;
     padding: 2px 9px;
 }
+/*css form navbar*/
+
+
+#search-box-head {
+    width: 457px;
+    position: absolute;
+    left: 22%;
+}
+
+#search-box-head input {
+        left: 7px;
+}
+
+
+#cartTopIcon {
+    position: relative;
+    right: 3%;
+    top:8px;
+}
+#emailTopIcon {
+    position: relative;
+    right: 2%;
+    top: 8px;
+}
+
+#logoutTopIcon {
+    position: relative;   
+    top: 8px;
+}
+#logoutTopIcon a{
+    color:black;
+}
+
+.menu_iconb-login a {
+    font-size: 24px;
+}
+.menu_iconb-login img {
+    
+}
+#side-bar-top {
+    margin-left: 20px;
+}
+/*css form navbar*/

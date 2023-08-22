@@ -43,6 +43,7 @@
             bottom: -250px;
             z-index: 1;
         }
+
         .next-view:before {
             content: ">";
             color: red;
@@ -52,6 +53,7 @@
             right: -7px;
             position: relative;
         }
+
         .next:before {
             content: ">";
             color: red;
@@ -61,10 +63,10 @@
             right: -7px;
             position: relative;
         }
+
         .frame-sh {
             margin-top: -99px;
         }
-
     </style>
 }
 
@@ -122,24 +124,24 @@
             <h3>top 10 new shoes</h3>
             <div class="frame-sh">
                 <div class="prev"></div>
-                <div  class="row new-shoes" id="data_newshoes">
+                <div class="row new-shoes" id="data_newshoes">
 
                     @*<div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 ">
-                        <div class="shoes-box">
+                            <div class="shoes-box">
 
-                            <i><img src="/images/Nike-Air-Zoom-Pegasus-35-xanh-duong-replica-7-800x600.jpg"></i>
+                                <i><img src="/images/Nike-Air-Zoom-Pegasus-35-xanh-duong-replica-7-800x600.jpg"></i>
 
-                            <p class="nolmal">Nike Air Zoom Pegasus 35</p>
-                            <h4>Price: <span class="nolmal monney" style="color: red">848000</span>đ <br><span style="font-size: 70%;">kho:17</span></h4>
-                        </div>
-                        <div style="display: flex;">
-                            <a class="buynow" name="buynow" onclick="buynow()">Buy now</a>
-                            <input class="getPid" type="hidden" value="19">
-                            <a class="buynow" name="addtocard" onclick="buy()">Add to cart</a>
+                                <p class="nolmal">Nike Air Zoom Pegasus 35</p>
+                                <h4>Price: <span class="nolmal monney" style="color: red">848000</span>đ <br><span style="font-size: 70%;">kho:17</span></h4>
+                            </div>
+                            <div style="display: flex;">
+                                <a class="buynow" name="buynow" onclick="buynow()">Buy now</a>
+                                <input class="getPid" type="hidden" value="19">
+                                <a class="buynow" name="addtocard" onclick="buy()">Add to cart</a>
 
-                        </div>
+                            </div>
 
-                    </div>*@                   
+                        </div>*@
                 </div>
                 <div class="next"></div>
             </div>
@@ -153,21 +155,21 @@
                 <div class="row view-shoes" id="data_viewTopShoes">
 
                     @*<div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 margintop">
-                        <div class="shoes-box">
-                            <i>
-                                <img src="/images/nike_air_force_1.jpg">
-                            </i>
-                            <p>
-                                <span class="nolmal">Nike Air Force 1</span>
-                            </p><h4>
-                                Price: <span class="nolmal monney" style="color: red">798000</span>đ <br>
-                                <span style="font-size: 70%;">kho:18</span>
-                            </h4>
-                        </div><div style="display: flex;">
-                            <a class="buynow" onclick="buynow()">Buy now</a><a class="buynow" onclick="buypn()">Add to cart</a>
-                        </div>
-                    </div>*@
-                                                        
+                            <div class="shoes-box">
+                                <i>
+                                    <img src="/images/nike_air_force_1.jpg">
+                                </i>
+                                <p>
+                                    <span class="nolmal">Nike Air Force 1</span>
+                                </p><h4>
+                                    Price: <span class="nolmal monney" style="color: red">798000</span>đ <br>
+                                    <span style="font-size: 70%;">kho:18</span>
+                                </h4>
+                            </div><div style="display: flex;">
+                                <a class="buynow" onclick="buynow()">Buy now</a><a class="buynow" onclick="buypn()">Add to cart</a>
+                            </div>
+                        </div>*@
+
                 </div>
                 <div class="next-view"></div>
             </div>
@@ -178,7 +180,7 @@
 
 
 
-@section Scripts{
+@section Scripts{   
     <script src="~/js/indexMain.js"></script>
     <script>
         // Function to add Font Awesome icons to Slick carousel buttons
@@ -187,7 +189,7 @@
             const nextButton = document.querySelector('.slick-next');
 
             if (prevButton && nextButton) {
-                console.log("???");
+                //console.log("???");
                 // Add Font Awesome icons to the buttons
                 prevButton.innerHTML = '<i class="fas fa-chevron-left"></i>';
                 nextButton.innerHTML = '<i class="fas fa-chevron-right"></i>';

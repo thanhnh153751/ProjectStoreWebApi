@@ -59,7 +59,7 @@ namespace ProjectManagementAPl.Controllers
         }
 
 
-        //[Authorize(Roles = "admin@estore.com")]
+        [Authorize(Roles = "1")]
         [HttpPost]        
         public async Task<ActionResult<CategoryModelApi>> postCategory([FromBody] CategoryModelApi p)
         {
@@ -81,7 +81,7 @@ namespace ProjectManagementAPl.Controllers
             }
         }
 
-        //[Authorize]
+        [Authorize(Roles = "1")]
         [HttpPut("{id}")]
         public async Task<IActionResult> putCategory([FromODataUri] int id, [FromBody] CategoryModelApi p)
         {
@@ -106,7 +106,7 @@ namespace ProjectManagementAPl.Controllers
             }
         }
 
-        //[Authorize(Roles = "admin@estore.com")]
+        [Authorize(Roles = "1")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> deleteCategory([FromODataUri] int id)
         {

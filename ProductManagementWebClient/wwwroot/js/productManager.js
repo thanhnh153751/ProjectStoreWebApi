@@ -9,7 +9,7 @@
             type: "get",
             contentType: "application/json; charset=utf-8",
             headers: {
-                "Authorization": "Bearer" + token
+                "Authorization": "Bearer " + token
             },
             success: function (result, status, xhr) {
                 // Populate the table with data

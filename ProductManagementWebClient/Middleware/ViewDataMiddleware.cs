@@ -19,7 +19,8 @@ namespace ProductManagementWebClient.Middleware
             if(httpContext.Session.GetString("idMember") != null)
             {
                 httpContext.Items["idMember"] = httpContext.Session.GetString("idMember");
-            }
+                httpContext.Items["emailUser"] = httpContext.Session.GetString("emailUser");
+            }            
             if (httpContext.Session.GetString("roleId") != null)
             {
                 httpContext.Items["roleId"] = httpContext.Session.GetString("roleId");

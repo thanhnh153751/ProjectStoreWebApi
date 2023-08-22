@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using ProjectManagementAPl.ViewModels;
@@ -6,7 +7,7 @@ using System.Text;
 
 namespace ProductManagementWebClient.Controllers
 {
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class CategoryController : Controller
     {
         Uri baseAddress = new Uri("https://localhost:7012/odata");

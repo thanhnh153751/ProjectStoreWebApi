@@ -65,8 +65,11 @@ namespace ProductManagementWebClient
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=IndexMain}/{id?}");
-            
-            
+
+            app.MapControllerRoute(
+            name: "customRoute",
+            pattern: "{controller=Home}/{action=IndexMain2}/{id}/{key}");
+
             app.Run();
         }
     }

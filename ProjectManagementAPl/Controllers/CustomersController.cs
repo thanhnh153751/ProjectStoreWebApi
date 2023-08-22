@@ -9,16 +9,16 @@ namespace ProjectManagementAPl.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public class MembersController : ControllerBase
+    public class CustomersController : ControllerBase
     {
-        //private IUserRepository repository;
-        //private IMapper _mapper;
+        private ICustomerRepository repository;
+        private IMapper _mapper;
 
-        //public MembersController(IUserRepository repository, IMapper mapper)
-        //{
-        //    this.repository = repository;
-        //    _mapper = mapper;
-        //}
+        public CustomersController(ICustomerRepository repository, IMapper mapper)
+        {
+            this.repository = repository;
+            _mapper = mapper;
+        }
 
 
         //[Authorize(Roles = "admin@estore.com")]
@@ -39,48 +39,52 @@ namespace ProjectManagementAPl.Controllers
 
 
         //[Authorize(Roles = "2")]
-        //[HttpGet("{id}")]
-        //public async Task<ActionResult<UserViewModel>> GetMember(int id)
-        //{
-        //    try
-        //    {
-        //        var member = repository.GetMemberById(id);
+        [HttpGet("{id}")]
+        public async Task<ActionResult<UserViewModel>> GetMember(int id)
+        {
+            try
+            {
+                var member = await repository.GetCustomerById(id);
 
-        //        if (member == null)
-        //        {
-        //            return NotFound();
-        //        }
+                if (member == null)
+                {
+                    return NotFound();
+                }
 
-        //        return _mapper.Map<UserViewModel>(member);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return StatusCode(500, "An error occurred while retrieving products.");
-        //    }
-        //}
+                return _mapper.Map<UserViewModel>(member);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, "An error occurred while retrieving products.");
+            }
+        }
 
 
         //// PUT: api/Products/5
         //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         //[Authorize(Roles = "2")]
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> UpdateMember(int id, UserViewModel p)
-        //{
-        //    try
-        //    {
-        //        var mep = repository.GetMemberById(id);
-        //        if (mep == null)
-        //            return NotFound();
-
-        //        var member = _mapper.Map<User>(p);
-        //        repository.UpdateMember(member);
-        //        return NoContent();
-        //    }
-        //    catch (Exception)
-        //    {
-        //        return StatusCode(500, "An error occurred while updating the product.");
-        //    }
-        //}
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateMemberInfor(int id, UserViewModel p)
+        {
+            try
+            {
+                var mep = await repository.GetCustomerById(id);
+                if (mep == null)
+                    return NotFound();
+                p.password = mep.password;
+                p.roleId = mep.roleId;
+                p.image = mep.image;
+                p.status = mep.status;
+                var member = _mapper.Map<Customer>(p);
+                await repository.Update(member);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return StatusCode(500, "An error occurred while updating the product.");
+            }
+        }
 
         //// POST: api/Products
         //[Authorize(Roles = "admin@estore.com")]

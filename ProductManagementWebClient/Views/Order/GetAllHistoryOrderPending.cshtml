@@ -1,0 +1,185 @@
+﻿@model ProjectManagementAPl.ViewModels.ListOrderCustomerByAdminModel
+@{
+    ViewData["Title"] = "ListCategoryManager";
+}
+@section styles{
+    <style>
+        .pagination {
+            /*            display: inline-block;*/
+        }
+
+            .pagination a {
+                color: black;
+                font-size: 22px;
+                float: left;
+                padding: 8px 16px;
+                text-decoration: none;
+            }
+
+                .pagination a.active {
+                    background-color: #ee3e0f;
+                    color: black;
+                }
+
+                .pagination a:hover:not(.active) {
+                    background-color: #ee3e0f;
+                }
+
+        table {
+            text-align: center;
+            margin: 0 auto;
+        }
+
+        tbody, td, tfoot, th, thead, tr {
+            border-width: 1px;
+        }
+
+        button a {
+            text-decoration: none;
+        }
+        .custom-modal-header {
+            background-color: #00ff00; /* Xanh lá cây */
+        }
+    </style>
+}
+
+<h1 style="text-align: center">Manager Pending Order</h1>
+
+<!-- toasts -->
+<div class="toast-container">
+</div>
+
+
+
+<!-- Modal Delete -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Are you sure you want to cancel this order?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="deleteCategoryForm" name="contact" role="form">
+                    <div class="modal-body">
+                        <input hidden id="orderId-de" value="" />
+                        <h3 id="orderid_de">OrderID:</h3>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="submitBtn-de">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Approval -->
+<div class="modal fade" id="approvalModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header custom-modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Are you sure you want to Approval this order?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="deleteCategoryForm" name="contact" role="form">
+                    <div class="modal-body">
+                        <input hidden id="orderId-apGet" value="" />
+                        <h3 id="orderid_ap">OrderID:</h3>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="submitBtn-ap">Approval</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Update-->
+<div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Detail Order</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Product Name</th>
+                            <th>Image</th>
+                            <th>Unit Price</th>
+                            <th>Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                @*<button type="button" class="btn btn-primary" id="submitBtn-up">Update</button>*@
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="datatable-container" style="width:95%">
+            <table id="productTable" class="display table table-sm table-bordered table-striped">
+                <!-- Increased width to 80% -->
+                <thead>
+                    <tr>
+                        <th width="1%">
+                            @Html.DisplayNameFor(model => model.orderId)
+                        </th>
+                        <th width="1%">
+                            @Html.DisplayNameFor(model => model.customerId)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.requiredDate)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.totalmoney)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.phone)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.address)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.status)
+                        </th>
+                        <th width="30%">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Data rows will be populated dynamically -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial"); }*@
+    @*<script id="token" type="application/json">@Html.Raw(Json.Serialize(Context.Items["token"]))</script>*@
+    <script src="~/js/GetAllHistoryOrderPending.js"></script>
+}
+

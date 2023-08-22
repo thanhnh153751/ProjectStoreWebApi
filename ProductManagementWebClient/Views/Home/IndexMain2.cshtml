@@ -39,6 +39,7 @@
         .paginationjs-page.active a {
             background-color: #ee3e0f;
         }
+        
     </style>
 }
 
@@ -47,13 +48,13 @@
         <div class="title">
             <h2>BRANDS</h2>
             <input id="curentCategoryId" type="hidden" value="@ViewBag.categoryId" />
+            <input id="curentKeySearch" type="hidden" value="@ViewBag.keySearch" />
             <ul class="categiri">
-                <li id="0" class="cateid"><a href="/Home/home2/0">ALL</a></li>
-                @*<li id="0" class="cateid @(ViewBag.CurenCid==0?"active":"")" onclick="loadProduct()"><a href="/Home/home2/0">ALL</a></li>
-                    @foreach (Category category in ViewBag.Allcategories)
-                    {
-                        <li id="@category.CategoryId" class="cateid @(ViewBag.CurenCid==category.CategoryId?"active":"")"><a href="/Home/home2/@category.CategoryId">@category.CategoryName</a></li>
-                    }*@
+                <li id="0" class="cateid"><a href="/Home/IndexMain2/0">ALL</a></li>
+                @foreach (var item in ViewBag.AllCategory)
+                {
+                    <li id="@item.categoryId" class="cateid"><a href="/Home/IndexMain2/@item.categoryId">@item.categoryName</a></li>
+                }
 
             </ul>
         </div>
@@ -66,8 +67,7 @@
 
         <!-- all shoes -->
         <div id="shoes" class="shoes-bg">
-            <h3>
-            </h3>
+            
             <div class="row" id="productHome2">
                 @*@foreach (Product product in Model)
                 {
@@ -109,7 +109,7 @@
 
 @section Scripts{
     @*<script src="~/js/order.js"></script>*@
-<script id="token" type="application/json">@Html.Raw(Json.Serialize(Context.Items["token"]))</script>
+@*<script id="token" type="application/json">@Html.Raw(Json.Serialize(Context.Items["token"]))</script>*@
     <script src="~/js/indexMain2.js"></script>
 }
 
