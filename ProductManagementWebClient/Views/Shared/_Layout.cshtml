@@ -16,7 +16,7 @@
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
     @RenderSection("styles", false)
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
     @{
         var id = @Context.Items["idMember"] ?? 0;
         var roleId = @Context.Items["roleId"] ?? 0;
@@ -61,7 +61,9 @@
                     <a href="/Order/GetAllHistoryOrderByCumtomerId">My History Order</a>
                 </li>
                 }
-                    
+            <li class="">
+                <a href="/Blog/BlogManager">Manager Blogs</a>
+            </li>   
 
 
                 </ul>
@@ -152,7 +154,7 @@
     </div>
 
     <div class="overlay"></div>
-    <footer class="">
+    <footer class="mt-auto" id="">
         <div class="footer">
             <div class="container">
                 <div class="row">

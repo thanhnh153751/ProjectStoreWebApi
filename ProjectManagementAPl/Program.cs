@@ -27,6 +27,7 @@ namespace ProjectManagementAPl
 
             var modelBuilder = new ODataConventionModelBuilder();
             modelBuilder.EntityType<Product>();
+            modelBuilder.EntityType<Blog>();
             modelBuilder.EntityType<ProductModel>();
             modelBuilder.EntityType<Category>();
             modelBuilder.EntityType<ViewProduct>();
@@ -37,6 +38,7 @@ namespace ProjectManagementAPl
             //modelBuilder.EntitySet<Product>("Products");
             modelBuilder.EntitySet<ProductModel>("Products").EntityType.Name = "Products";
             modelBuilder.EntitySet<Category>("Categorys");
+            modelBuilder.EntitySet<Blog>("Blogs");
             //modelBuilder.EntitySet<Customer>("Customers");
 
             builder.Services.AddControllers().AddOData(option => option.Select().Filter()
@@ -68,6 +70,7 @@ namespace ProjectManagementAPl
             //---------
 
             // Add Repository
+            builder.Services.AddScoped<IBlogRepository, BlogRepository>();
             builder.Services.AddScoped<IProductRepository, ProductRepository>();
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
             builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();

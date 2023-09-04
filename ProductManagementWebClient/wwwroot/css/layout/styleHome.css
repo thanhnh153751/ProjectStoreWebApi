@@ -26,7 +26,7 @@
 @import url(font-awesome.min.css);
 @import url(meanmenu.css);
 @import url(owl.carousel.min.css);
-@import url(swiper.min.css);
+/*@import url(swiper.min.css);*/
 @import url(slick.css);
 @import url(jquery.fancybox.min.css);
 @import url(jquery-ui.css);
@@ -131,13 +131,13 @@ button:focus {
     outline: none;
 }
 
-ul,
+/*ul,
 li,
 ol {
     margin: 0px;
     padding: 0px;
     list-style: none;
-}
+}*/
 
 p {
     margin: 0px;
@@ -1936,6 +1936,12 @@ ul.categiri li {
 /** end Kids section **/
 
 /** footer section **/
+#footer {
+    position: relative;
+    margin-top: -100px;
+    clear:both;
+}
+
 
 .footer {
     background: #23242a;

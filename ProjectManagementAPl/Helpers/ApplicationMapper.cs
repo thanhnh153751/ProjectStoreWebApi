@@ -14,6 +14,12 @@ namespace ProjectManagementAPl.Helpers
             CreateMap<Product, ProductModelApi>().ReverseMap();
             CreateMap<Product, ProductModel>().ReverseMap();
             CreateMap<Category, CategoryModelApi>().ReverseMap();
+
+            CreateMap<Blog, BlogModel>()
+                .ForMember(dest => dest.content_blog, opt => opt.MapFrom(src => src.content))
+                .ForMember(dest => dest.title_blog, opt => opt.MapFrom(src => src.title))
+                .ReverseMap();
+
             CreateMap<Order, ListOrderCustomerByIdModel>()
              .ForMember(dest => dest.address, opt => opt.MapFrom(src => src.Customer.address))
              .ForMember(dest => dest.phone, opt => opt.MapFrom(src => src.Customer.phone));

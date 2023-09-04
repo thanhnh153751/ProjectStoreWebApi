@@ -17,6 +17,7 @@ namespace BusinessObjects
             IConfigurationRoot configuration = builder.Build();
             optionsBuilder.UseSqlServer(configuration.GetConnectionString("MyDB"));
         }
+        public DbSet<Blog> Blog { get; set; }
         public DbSet<RoleAccount> RoleAccount { get; set; }
         public DbSet<Product> Product { get; set; }
         public DbSet<Category> Category { get; set; }
@@ -27,6 +28,9 @@ namespace BusinessObjects
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Blog>()
+            .HasKey(x => x.blogId);
+
             modelBuilder.Entity<RoleAccount>()
             .HasKey(r => r.roleId);
 
